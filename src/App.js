@@ -1,17 +1,18 @@
 import React from "react";
 import "./App.css";
 import MainCard from "./Components/MainCard/MainCard";
+import Header from "./Components/Header/Header";
 
 
 function App() {
 
 
   return (
-    <>
-      <h2> Home </h2>
+    <div className="appContainer">
+      <Header />
     <MainCard/>
       
-    </>
+    </div>
   );
 }
 

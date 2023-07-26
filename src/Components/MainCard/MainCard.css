@@ -1,0 +1,22 @@
+.mainListDiv{
+    width: 15rem;
+    height : auto;
+    background-color: #212A3E;
+    margin: 1.5rem;
+    padding-top: 10px;
+    text-align: center;
+    border-radius: 15px;
+    color: white;
+}
+
+.innerCardDiv{
+    background-color: #394867;
+    margin: 5%;
+    margin-bottom: 10px;
+    width: 90%;
+    height: 2.5rem;
+    text-align: left;
+    font-size: 1rem;
+    padding-left: 15px;
+ 
+}
