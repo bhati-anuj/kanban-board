@@ -16,9 +16,7 @@ const MainCard = () => {
   const [clicked, setClicked] = useState(false);
   const [cardText, setCardText] = useState();
   const [modalShow, setModalShow] = useState(false);
-  const [filteredCard, setFilteredCard] = useState({});
-  // const [filteredList, setFilteredList] = useState({});
-
+  const[id, setId]=useState();
   const dispatch = useDispatch();
 
   const mainListDiv = useSelector((state) => {
@@ -72,12 +70,9 @@ const MainCard = () => {
 
   function handleDialog(event, ID) {
     setModalShow(true);
-    
-    const filteredList = mainListDiv.find((item) => item.ID === ID);
-    setFilteredCard(
-      filteredList.innerCard.filter((item) => item.cardID === event)
-    );
+    setId({listId:ID,cardId:event})
   }
+
 
   return (
     <div className="mainCardContainer">
@@ -165,8 +160,7 @@ const MainCard = () => {
           </form>
         )}
         <DescriptionBox
-          // listData={filteredList}
-          cardData={filteredCard}
+        ids={id}
           show={modalShow}
           onHide={() => setModalShow(false)}
         />

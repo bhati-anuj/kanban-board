@@ -1,27 +1,34 @@
-import React from "react";
+import React, { useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const DescriptionBox = (props) => {
 
-  // const listData =useSelector((state) =>{
-  //   return state.mainList
-  // }) 
 
-  // console.log("data", listData);
+  const listData =useSelector((state) =>{
+    return state.mainList
+  }) 
 
-  // const activeCard  = props.cardData[0];
-  // console.log(activeCard.cardName);
+  console.log("data", listData);
 
-  // const filteredList = listData.find((item) => item.ID === activeCard.listID);
-  // console.log("new list",filteredList);
-  // const filteredCard = filteredList.innerCard.filter(item =>item.cardID === activeCard.cardID)
-  // console.log("new card",filteredCard);
+  const activeCard  = props.ids;
 
+
+     let refFilteredList=useRef()
+     let refFilteredCard=useRef()
+
+ 
+  if(props.ids){
+     refFilteredList = listData.find((item) => item.ID === activeCard.listId);
+    refFilteredCard = refFilteredList.innerCard.find(item =>item.cardID === activeCard.cardId)
+ 
+  }
+console.log(refFilteredCard,refFilteredList);
 
   return (
     <Modal
+    
       {...props}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
@@ -29,11 +36,11 @@ const DescriptionBox = (props) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {/* {activeCard.cardName} */}
+         {refFilteredCard.cardName}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4> from list </h4>
+        <h4> from list  {refFilteredList.listtitle} </h4>
         <p>
           Cras mattis consectetur purus sit
         </p>
