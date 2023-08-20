@@ -1,22 +1,58 @@
-.mainListDiv{
-    width: 15rem;
-    height : auto;
-    background-color: #212A3E;
-    margin: 1.5rem;
-    padding-top: 10px;
-    text-align: center;
-    border-radius: 15px;
-    color: white;
+.mainListDiv {
+  width: 15rem;
+  height: auto;
+  background-color: #212a3e;
+  margin: 1.5rem;
+  padding-top: 10px;
+  text-align: center;
+  border-radius: 15px;
+  color: white;
+}
+.listInputDiv {
+  width: max-content;
+  height: max-content;
+  background-color: #212a3e;
+  margin: 1.5rem;
+  padding: 15px;
+  text-align: center;
+  border-radius: 15px;
+  color: white;
+  align-items: center;
+  display: flex;
 }
 
-.innerCardDiv{
-    background-color: #394867;
-    margin: 5%;
-    margin-bottom: 10px;
-    width: 90%;
-    height: 2.5rem;
-    text-align: left;
-    font-size: 1rem;
-    padding-left: 15px;
- 
+.innerCardDiv {
+  background-color: #394867;
+  margin: 5%;
+  margin-bottom: 10px;
+  width: 90%;
+  height: auto;
+  min-height: 2.5rem;
+  text-align: left;
+  font-size: 1rem;
+  padding: 5%;
+  display: flex;
+  justify-content: space-between;
+}
+.card-delete-icon,
+.list-delete-icon {
+  opacity: 0;
+}
+.innerCardDiv:hover {
+  .card-delete-icon {
+    opacity: 1;
+  }
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 2%;
+  margin: 5%;
+  border-bottom: 2px solid white;
+}
+.list-header:hover {
+  .list-delete-icon {
+    opacity: 1;
+  }
 }

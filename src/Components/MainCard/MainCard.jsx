@@ -4,10 +4,13 @@ import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 import {
-  addActiveCard,
   addCard,
   addMainList,
+  cutCardBtn,
+  deleteCard,
+  deleteList,
   newCardInsert,
+  updateListTitle,
 } from "../../Store/ListSlice/ListSlice";
 import DescriptionBox from "../DescriptionBox/DescriptionBox";
 
@@ -16,22 +19,19 @@ const MainCard = () => {
   const [clicked, setClicked] = useState(false);
   const [cardText, setCardText] = useState();
   const [modalShow, setModalShow] = useState(false);
-  const[id, setId]=useState();
+  const [id, setId] = useState();
+  const [editListTitle, setEditListTitle] = useState(false);
   const dispatch = useDispatch();
 
   const mainListDiv = useSelector((state) => {
     return state.mainList;
-  }); 
+  });
   console.log(mainListDiv);
 
   // ********************************** Main List Div******************************************
 
   const handleAddList = () => {
     setClicked(!clicked);
-  };
-
-  const hadleListTitle = (e) => {
-    setListTitle(e);
   };
 
   function handleListSubmit() {
@@ -46,6 +46,16 @@ const MainCard = () => {
     setClicked(!clicked);
   }
 
+  function updateList(item){
+    
+    dispatch(updateListTitle({
+      item : item,
+      title:listTitle,
+    }))
+
+    setEditListTitle(!editListTitle);
+  }
+
   // *********************************** Working on Card *****************************************
 
   const handleCardText = (text) => {
@@ -58,6 +68,7 @@ const MainCard = () => {
         name: cardText,
         cardId: v4(),
         listID: e.target.id,
+        description: { text: "Description goes here..." },
       })
     );
   };
@@ -70,31 +81,78 @@ const MainCard = () => {
 
   function handleDialog(event, ID) {
     setModalShow(true);
-    setId({listId:ID,cardId:event})
+    setId({ listId: ID, cardId: event });
   }
 
+  const handleListDelete = (e) => {
+    dispatch(deleteList({ deleteListID: e }));
+  };
+
+  const handleCardDelete = (idCard, idList) => {
+    dispatch(deleteCard({ deleteCardID: idCard, deleteListID: idList }));
+  };
+
+  function cancelCardBtn(e) {
+    dispatch(cutCardBtn(e));
+  }
 
   return (
     <div className="mainCardContainer">
       <div style={{ display: "flex" }}>
         <ul style={{ display: "flex", listStyle: "none" }}>
-          {/*  ****************************************** Main Div Map ************************************** */}
+          {/*  ****************************************** Main List Map ************************************** */}
 
-          {mainListDiv.map((e) => (
+          {mainListDiv.map((e, index) => (
             <li key={e.ID}>
-              <div id={e.ID} className="mainListDiv">
-                <h4>{e.listtitle}</h4>
-
+              <div id={e.ID} key={index} className="mainListDiv">
+                <div className="list-header">
+                  {!editListTitle ? <h4 onClick={()=>setEditListTitle(!editListTitle)}>{e.listtitle}</h4> 
+                  :
+                  <>
+                  <input type="text" onChange={(e) => setListTitle(e.target.value)} />
+                  <Button id={e.ID} onClick={(e)=>updateList(e.target.id)}>Update</Button>
+                  <Button  className="btn-danger" onClick={()=>setEditListTitle(!editListTitle)}>X</Button>
+                  </>
+                  }
+                  
+                  <svg
+                    id="list-delete"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-trash3-fill list-delete-icon"
+                    viewBox="0 0 16 16"
+                    onClick={() => handleListDelete(e.ID)}
+                  >
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                  </svg>
+                </div>
                 {/**********************************************  Inner Card Map ********************************* */}
                 <div className="outerCardDiv">
                   {e.innerCard.map((item) => (
                     <>
-                      <div
-                        id={item.cardID}
-                        className="innerCardDiv"
-                        onClick={(event) => handleDialog(event.target.id, e.ID)}
-                      >
-                        {item.cardName}
+                      <div className="innerCardDiv">
+                        <div
+                          id={item.cardID}
+                          className="cardTitleDiv"
+                          onClick={(event) =>
+                            handleDialog(event.target.id, e.ID)
+                          }
+                        >
+                          {item.cardName}
+                        </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-trash3-fill card-delete-icon"
+                          viewBox="0 0 16 16"
+                          onClick={() => handleCardDelete(item.cardID, e.ID)}
+                        >
+                          <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                        </svg>
                       </div>
                     </>
                   ))}
@@ -114,7 +172,7 @@ const MainCard = () => {
                     <form action="submit">
                       <input
                         type="text"
-                        onChange={(e) => handleCardText(e.target.value)}
+                        onChange={(e) => handleCardText(e.currentTarget.value)}
                         style={{
                           width: "90%",
                           borderRadius: "5px",
@@ -129,6 +187,19 @@ const MainCard = () => {
                       >
                         Add Card Title
                       </Button>
+
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="25"
+                        fill="currentColor"
+                        className="bi bi-x-circle ms-3 mb-2"
+                        viewBox="0 0 16 16"
+                        onClick={() => cancelCardBtn(e.ID)}
+                      >
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                      </svg>
                     </form>
                   )}
                 </div>
@@ -146,10 +217,11 @@ const MainCard = () => {
             Add New List{" "}
           </Button>
         ) : (
-          <form action="submit" style={{ marginTop: "30px" }}>
+          <div className="listInputDiv">
+          <form action="submit" >
             <input
               type="text"
-              onChange={(e) => hadleListTitle(e.target.value)}
+              onChange={(e) => setListTitle(e.target.value)}
             />
             <Button
               onClick={handleListSubmit}
@@ -157,10 +229,23 @@ const MainCard = () => {
             >
               Add List
             </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              fill="currentColor"
+              className="bi bi-x-circle ms-3 mb-2"
+              viewBox="0 0 16 16"
+              onClick={()=>setClicked(!clicked)}
+            >
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+            </svg>
           </form>
+          </div>
         )}
         <DescriptionBox
-        ids={id}
+          ids={id}
           show={modalShow}
           onHide={() => setModalShow(false)}
         />
