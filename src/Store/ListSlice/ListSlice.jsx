@@ -49,7 +49,7 @@ const ListSlice = createSlice({
 
     deleteList(state, action) {
       const { deleteListID } = action.payload;
-      state = state.filter((e) => e.ID != deleteListID);
+      state = state.filter((e) => e.ID !== deleteListID);
       return state;
     },
 
@@ -60,7 +60,7 @@ const ListSlice = createSlice({
 
       if (value) {
         value.innerCard = value.innerCard.filter(
-          (item) => item.cardID != deleteCardID
+          (item) => item.cardID !== deleteCardID
         );
       }
     },
@@ -70,12 +70,21 @@ const ListSlice = createSlice({
       value.newCardInputField = true;
     },
 
-    updateListTitle(state,action){
-      
-      const {item,title} = action.payload
+    updateListTitle(state, action) {
+      const { item, title } = action.payload;
       const value = state.find((e) => e.ID === item);
-  
-      value && (value.listtitle = title);
+
+      if(value){
+        value.listtitle = title;
+        value.toggleListTitle = true;
+      }
+    },
+
+    toggleList(state,action){
+      const value = state.find((e) => e.ID === action.payload);
+
+      value && (value.toggleListTitle = false)
+
     }
   },
 });
@@ -91,4 +100,5 @@ export const {
   deleteCard,
   cutCardBtn,
   updateListTitle,
+  toggleList,
 } = ListSlice.actions;

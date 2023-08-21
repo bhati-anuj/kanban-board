@@ -10,6 +10,7 @@ import {
   deleteCard,
   deleteList,
   newCardInsert,
+  toggleList,
   updateListTitle,
 } from "../../Store/ListSlice/ListSlice";
 import DescriptionBox from "../DescriptionBox/DescriptionBox";
@@ -30,9 +31,7 @@ const MainCard = () => {
 
   // ********************************** Main List Div******************************************
 
-  const handleAddList = () => {
-    setClicked(!clicked);
-  };
+
 
   function handleListSubmit() {
     dispatch(
@@ -41,19 +40,24 @@ const MainCard = () => {
         ID: v4(),
         innerCard: [],
         newCardInputField: true,
+        toggleListTitle : true,
       })
     );
     setClicked(!clicked);
   }
 
-  function updateList(item){
-    
-    dispatch(updateListTitle({
-      item : item,
-      title:listTitle,
-    }))
+  function updateList(item) {
+    dispatch(
+      updateListTitle({
+        item: item,
+        title: listTitle,
+      })
+    );
 
-    setEditListTitle(!editListTitle);
+  }
+
+  function handleListTitle(event){
+      dispatch(toggleList(event))
   }
 
   // *********************************** Working on Card *****************************************
@@ -97,24 +101,50 @@ const MainCard = () => {
   }
 
   return (
+
     <div className="mainCardContainer">
       <div style={{ display: "flex" }}>
         <ul style={{ display: "flex", listStyle: "none" }}>
+          
           {/*  ****************************************** Main List Map ************************************** */}
 
           {mainListDiv.map((e, index) => (
             <li key={e.ID}>
               <div id={e.ID} key={index} className="mainListDiv">
                 <div className="list-header">
-                  {!editListTitle ? <h4 onClick={()=>setEditListTitle(!editListTitle)}>{e.listtitle}</h4> 
-                  :
-                  <>
-                  <input type="text" onChange={(e) => setListTitle(e.target.value)} />
-                  <Button id={e.ID} onClick={(e)=>updateList(e.target.id)}>Update</Button>
-                  <Button  className="btn-danger" onClick={()=>setEditListTitle(!editListTitle)}>X</Button>
-                  </>
-                  }
-                  
+                  { e.toggleListTitle ? (
+                    <h4 id={e.ID} onClick={(e) => handleListTitle(e.target.id)}>
+                      {e.listtitle}
+                    </h4>
+                  ) : (
+                    <form>
+                      <input
+                        type="text"
+                        style={{ width: "100%", marginBottom: "5px" }}
+                        onChange={(e) => setListTitle(e.target.value)}
+                      />
+                      <Button
+                        id={e.ID}
+                        onClick={(e) => updateList(e.target.id)}
+                        className="btn me-2"
+                      >
+                        Update
+                      </Button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="25"
+                        fill="currentColor"
+                        className="bi bi-x-circle ms-3 mb-2"
+                        viewBox="0 0 16 16"
+                        onClick={() => setEditListTitle(!editListTitle)}
+                      >
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                      </svg>
+                    </form>
+                  )}
+
                   <svg
                     id="list-delete"
                     xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +240,7 @@ const MainCard = () => {
         {!clicked ? (
           <Button
             className="m-5"
-            onClick={handleAddList}
+            onClick={()=>setClicked(!clicked)}
             style={{ height: "2.5rem" }}
           >
             {" "}
@@ -218,30 +248,30 @@ const MainCard = () => {
           </Button>
         ) : (
           <div className="listInputDiv">
-          <form action="submit" >
-            <input
-              type="text"
-              onChange={(e) => setListTitle(e.target.value)}
-            />
-            <Button
-              onClick={handleListSubmit}
-              style={{ height: "2.5rem", marginLeft: "10px" }}
-            >
-              Add List
-            </Button>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="currentColor"
-              className="bi bi-x-circle ms-3 mb-2"
-              viewBox="0 0 16 16"
-              onClick={()=>setClicked(!clicked)}
-            >
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg>
-          </form>
+            <form action="submit">
+              <input
+                type="text"
+                onChange={(e) => setListTitle(e.target.value)}
+              />
+              <Button
+                onClick={handleListSubmit}
+                style={{ height: "2.5rem", marginLeft: "10px" }}
+              >
+                Add List
+              </Button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                fill="currentColor"
+                className="bi bi-x-circle ms-3 mb-2"
+                viewBox="0 0 16 16"
+                onClick={() => setClicked(!clicked)}
+              >
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+              </svg>
+            </form>
           </div>
         )}
         <DescriptionBox
