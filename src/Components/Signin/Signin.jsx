@@ -4,25 +4,29 @@ import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addLoginUser } from "../../Store/ListSlice/UserSlice";
 
 const Signin = () => {
   const userData = useSelector((state)=>{
-    return state.userList;
+    return state.userList.users;
   })
+
+
   console.log(userData);
 
   const emailRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
 
 function handleLogin() {
 
   const userObj = userData.find((e) =>e.userEmail === emailRef.current.value && e.userPassword === passwordRef.current.value);
 
   if(userObj){
-    console.log(userObj.userName);
+ 
+    dispatch(addLoginUser(userObj));
     navigate("/");
   }
   else{
