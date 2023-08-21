@@ -13,6 +13,7 @@ import {
   updateListTitle,
 } from "../../Store/ListSlice/ListSlice";
 import DescriptionBox from "../DescriptionBox/DescriptionBox";
+import Header from "../Header/Header";
 
 const MainCard = () => {
   const [listTitle, setListTitle] = useState();
@@ -102,6 +103,7 @@ const MainCard = () => {
   return (
 
     <div className="mainCardContainer">
+      <Header/>
       <div style={{ display: "flex" }}>
         <ul style={{ display: "flex", listStyle: "none" }}>
           
@@ -112,7 +114,7 @@ const MainCard = () => {
               <div id={e.ID} key={index} className="mainListDiv">
                 <div className="list-header">
                   { e.toggleListTitle ? (
-                    <h4 id={e.ID} onClick={(e) => handleListTitle(e.target.id)}>
+                    <h4 id={e.ID} onClick={(e) => handleListTitle(e.currentTarget.id)}>
                       {e.listtitle}
                     </h4>
                   ) : (
@@ -120,11 +122,11 @@ const MainCard = () => {
                       <input
                         type="text"
                         style={{ width: "100%", marginBottom: "5px" }}
-                        onChange={(e) => setListTitle(e.target.value)}
+                        onChange={(e) => setListTitle(e.currentTarget.value)}
                       />
                       <Button
                         id={e.ID}
-                        onClick={(e) => updateList(e.target.id)}
+                        onClick={(e) => updateList(e.currentTarget.id)}
                         className="btn me-2"
                       >
                         Update
@@ -137,7 +139,7 @@ const MainCard = () => {
                         fill="currentColor"
                         className="bi bi-x-circle ms-3 "
                         viewBox="0 0 16 16"
-                        onClick={(e) => handleListTitle(e.target.id)}
+                        onClick={(e) => handleListTitle(e.currentTarget.id)}
                       >
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -167,7 +169,7 @@ const MainCard = () => {
                           id={item.cardID}
                           className="cardTitleDiv"
                           onClick={(event) =>
-                            handleDialog(event.target.id, e.ID)
+                            handleDialog(event.currentTarget.id, e.ID)
                           }
                         >
                           {item.cardName}
@@ -252,7 +254,7 @@ const MainCard = () => {
             <form action="submit">
               <input
                 type="text"
-                onChange={(e) => setListTitle(e.target.value)}
+                onChange={(e) => setListTitle(e.currentTarget.value)}
               />
               <Button
                 onClick={handleListSubmit}

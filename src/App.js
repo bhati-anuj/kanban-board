@@ -2,16 +2,21 @@ import React from "react";
 import "./App.css";
 import MainCard from "./Components/MainCard/MainCard";
 import Header from "./Components/Header/Header";
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Signup from "./Components/Signup/Signup";
+import Signin from "./Components/Signin/Signin";
 
 function App() {
-
-
   return (
     <div className="appContainer">
-      <Header />
-    <MainCard/>
-      
+      <BrowserRouter>
+       
+        <Routes>
+          <Route path="/" element={<MainCard />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Signin />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

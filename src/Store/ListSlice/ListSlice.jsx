@@ -9,7 +9,7 @@ const ListSlice = createSlice({
     },
 
     addCard(state, action) {
-      const { cardName, cardID, listID, descriptionData, toggleCardTitle } =
+      const { listID } =
         action.payload;
       const value = state.find((e) => e.ID === listID);
       if (value) {

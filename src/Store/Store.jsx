@@ -3,9 +3,11 @@ import { ListSlice } from "./ListSlice/ListSlice";
 import persistReducer from "redux-persist/es/persistReducer";
 import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage";
+import { UserSlice } from "./ListSlice/UserSlice";
 
 const rootReducer = combineReducers({
     mainList : ListSlice.reducer,
+    userList : UserSlice.reducer,
 });
 
 const persistConfig ={

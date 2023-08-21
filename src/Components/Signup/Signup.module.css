@@ -1,0 +1,46 @@
+
+.modalDialog {
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  
+
+}
+.signupDiv {
+  width: 50%;
+  height: 100%;
+  display: block;
+  margin: 5%;
+}
+.detailDiv {
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  margin: 5%;
+}
+.detailDiv > label {
+  margin: 5%;
+  margin-top: 10%;
+  border-style: none;
+  border-bottom: 2px solid grey;
+}
+.detailDiv > label > input:focus {
+  width: 100%;
+  outline: none;
+}
+.detailDiv > label:focus {
+  border-style: none;
+}
+
+.detailDiv > button {
+  margin: 5%;
+}
+
+.sideDiv {
+  width: 50%;
+  height: 100%;
+  background: url(https://images.pexels.com/photos/2624399/pexels-photo-2624399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  background-size: cover;
+  opacity: 0.8;
+  
+}
