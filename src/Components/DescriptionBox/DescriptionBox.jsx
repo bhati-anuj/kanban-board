@@ -5,12 +5,13 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { addDescription } from "../../Store/ListSlice/ListSlice";
+import { addDescription, toggleCard, updateCard } from "../../Store/ListSlice/ListSlice";
 
 const DescriptionBox = (props) => {
   const editor = useRef(null);
   const [content, setContent] = useState("Description goes here...");
   const [showEditor, setShowEditor] = useState(false);
+  const [newCardTitle, setNewCardTitle] = useState();
 
   const plainText = htmlToText(content);
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const DescriptionBox = (props) => {
       (item) => item.cardID === activeCard.cardId
 
     );
+
     refDescriptionText = refFilteredCard.descriptionData.text;
   }
 
@@ -48,6 +50,20 @@ const DescriptionBox = (props) => {
     dispatch(addDescription(desc)); 
     setShowEditor(!showEditor)
   };
+
+  /************************************** Update Card  ************************************************/
+
+  function handleToggleCardTitle(event) {
+    
+    dispatch(toggleCard(event))
+  }
+
+  function updateCardTitle(event){
+      dispatch(updateCard({
+        cardData : event,
+        updatedCardTitle : newCardTitle,
+      }))
+  }
 
   return (
     <Modal
@@ -73,13 +89,19 @@ const DescriptionBox = (props) => {
             <path d="M2.5 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm2-.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1 .5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
             <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm13 2v2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zM2 14a1 1 0 0 1-1-1V6h14v7a1 1 0 0 1-1 1H2z" />
           </svg>
-          {refFilteredCard.cardName}
+          {refFilteredCard.toggleCardTitle ? <>
+         <h2  onClick={() =>handleToggleCardTitle(refFilteredCard)} >{refFilteredCard.cardName}</h2> 
           <p
             style={{ fontWeight: "400", fontSize: "18px", marginLeft: "35px" }}
-          >
+            >
             {" "}
-            from list {refFilteredList.listtitle}{" "}
+            <em> from list</em> {refFilteredList.listtitle}{" "}
           </p>
+            </> : <>
+            <input type="text"   onChange={(e)=>setNewCardTitle(e.currentTarget.value)}/>
+            <Button onClick={()=>updateCardTitle(refFilteredCard)}>Update</Button>
+            <Button className="btn-danger" onClick={() =>handleToggleCardTitle(refFilteredCard)}>Cancel</Button>
+            </>}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ backgroundColor: "#394867", color: "white" }}>

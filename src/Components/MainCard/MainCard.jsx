@@ -6,7 +6,6 @@ import { v4 } from "uuid";
 import {
   addCard,
   addMainList,
-  cutCardBtn,
   deleteCard,
   deleteList,
   newCardInsert,
@@ -21,7 +20,7 @@ const MainCard = () => {
   const [cardText, setCardText] = useState();
   const [modalShow, setModalShow] = useState(false);
   const [id, setId] = useState();
-  const [editListTitle, setEditListTitle] = useState(false);
+  
   const dispatch = useDispatch();
 
   const mainListDiv = useSelector((state) => {
@@ -59,6 +58,7 @@ const MainCard = () => {
   function handleListTitle(event){
       dispatch(toggleList(event))
   }
+ 
 
   // *********************************** Working on Card *****************************************
 
@@ -69,10 +69,11 @@ const MainCard = () => {
   const handleAddCardTitle = (e) => {
     dispatch(
       addCard({
-        name: cardText,
-        cardId: v4(),
+        cardName: cardText,
+        cardID: v4(),
         listID: e.target.id,
-        description: { text: "Description goes here..." },
+        toggleCardTitle: true,
+        descriptionData: { text: "Description goes here..." },
       })
     );
   };
@@ -96,9 +97,7 @@ const MainCard = () => {
     dispatch(deleteCard({ deleteCardID: idCard, deleteListID: idList }));
   };
 
-  function cancelCardBtn(e) {
-    dispatch(cutCardBtn(e));
-  }
+ 
 
   return (
 
@@ -131,13 +130,14 @@ const MainCard = () => {
                         Update
                       </Button>
                       <svg
+                        id={e.ID}
                         xmlns="http://www.w3.org/2000/svg"
                         width="25"
                         height="25"
                         fill="currentColor"
-                        className="bi bi-x-circle ms-3 mb-2"
+                        className="bi bi-x-circle ms-3 "
                         viewBox="0 0 16 16"
-                        onClick={() => setEditListTitle(!editListTitle)}
+                        onClick={(e) => handleListTitle(e.target.id)}
                       >
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -219,13 +219,14 @@ const MainCard = () => {
                       </Button>
 
                       <svg
+                      id={e.ID}
                         xmlns="http://www.w3.org/2000/svg"
                         width="25"
                         height="25"
                         fill="currentColor"
                         className="bi bi-x-circle ms-3 mb-2"
                         viewBox="0 0 16 16"
-                        onClick={() => cancelCardBtn(e.ID)}
+                        onClick={(e) => handleAddCard(e)}
                       >
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />

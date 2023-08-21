@@ -9,22 +9,21 @@ const ListSlice = createSlice({
     },
 
     addCard(state, action) {
-      const data = {
-        cardName: action.payload.name,
-        cardID: action.payload.cardId,
-        listId: action.payload.listID,
-        descriptionData: action.payload.description,
-      };
-      const value = state.find((e) => e.ID === data.listId);
+      const { cardName, cardID, listID, descriptionData, toggleCardTitle } =
+        action.payload;
+      const value = state.find((e) => e.ID === listID);
       if (value) {
-        value.innerCard.push(data);
+        value.innerCard.push(action.payload);
         value.newCardInputField = true;
       }
     },
 
     newCardInsert(state, action) {
       const value = state.find((e) => e.ID === action.payload);
-      value.newCardInputField = false;
+      if(value){
+
+        value.newCardInputField = !value.newCardInputField;
+      }
     },
 
     addDescription(state, action) {
@@ -65,27 +64,51 @@ const ListSlice = createSlice({
       }
     },
 
-    cutCardBtn(state, action) {
-      const value = state.find((e) => e.ID === action.payload);
-      value.newCardInputField = true;
-    },
-
     updateListTitle(state, action) {
       const { item, title } = action.payload;
       const value = state.find((e) => e.ID === item);
 
-      if(value){
+      if (value) {
         value.listtitle = title;
         value.toggleListTitle = true;
       }
     },
 
-    toggleList(state,action){
+    toggleList(state, action) {
       const value = state.find((e) => e.ID === action.payload);
 
-      value && (value.toggleListTitle = false)
+      value && (value.toggleListTitle = !value.toggleListTitle);
+    },
 
-    }
+    toggleCard(state, action) {
+      const reqList = state.find((e) => e.ID === action.payload.listID);
+
+      if (reqList) {
+        const reqCard = reqList.innerCard.find(
+          (e) => e.cardID === action.payload.cardID
+        );
+
+        if (reqCard) {
+          reqCard.toggleCardTitle = !reqCard.toggleCardTitle;
+        }
+      }
+    },
+
+    updateCard(state, action) {
+      const { cardData, updatedCardTitle } = action.payload;
+      const reqList = state.find((e) => e.ID === cardData.listID);
+
+      if (reqList) {
+        const reqCard = reqList.innerCard.find(
+          (e) => e.cardID === cardData.cardID
+        );
+
+        if (reqCard) {
+          reqCard.cardName = updatedCardTitle;
+          reqCard.toggleCardTitle = true;
+        }
+      }
+    },
   },
 });
 
@@ -98,7 +121,8 @@ export const {
   addDescription,
   deleteList,
   deleteCard,
-  cutCardBtn,
   updateListTitle,
   toggleList,
+  toggleCard,
+  updateCard,
 } = ListSlice.actions;
