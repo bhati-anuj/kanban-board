@@ -109,8 +109,7 @@ function handleCreateAccount() {
           </div>
 
           <div className={style.sideDiv}>
-            {" "}
-            <h1>Back Ground image</h1>
+        
           </div>
         </div>
       </Modal.Dialog>

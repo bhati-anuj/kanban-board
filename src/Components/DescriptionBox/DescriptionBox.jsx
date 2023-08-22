@@ -23,6 +23,8 @@ import ru from 'javascript-time-ago/locale/ru.json'
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
 
+
+
 const DescriptionBox = (props) => {
   const activeCard = props.ids;
   const date = new Date();
@@ -111,8 +113,8 @@ const DescriptionBox = (props) => {
       centered
     >
       <Modal.Header
-        closeButton
-        style={{ backgroundColor: "#212A3E", color: "white" }}
+       
+        style={{ backgroundColor: "#212A3E", color: "rgb(208, 203, 203)" }}
       >
         <Modal.Title id="contained-modal-title-vcenter">
           <svg
@@ -129,9 +131,9 @@ const DescriptionBox = (props) => {
           </svg>
           {refFilteredCard.toggleCardTitle ? (
             <>
-              <h2 onClick={() => handleToggleCardTitle(refFilteredCard)}>
+              <span onClick={() => handleToggleCardTitle(refFilteredCard)}>
                 {refFilteredCard.cardName}
-              </h2>
+              </span>
               <p
                 style={{
                   fontWeight: "400",
@@ -140,7 +142,7 @@ const DescriptionBox = (props) => {
                 }}
               >
                 {" "}
-                <em> from list</em> {refFilteredList.listtitle}{" "}
+                <em> from list</em> <u>{refFilteredList.listtitle}</u>{" "}
               </p>
             </>
           ) : (
@@ -149,11 +151,11 @@ const DescriptionBox = (props) => {
                 type="text"
                 onChange={(e) => setNewCardTitle(e.currentTarget.value)}
               />
-              <Button onClick={() => updateCardTitle(refFilteredCard)}>
+              <Button onClick={() => updateCardTitle(refFilteredCard)} className="ms-2">
                 Update
               </Button>
               <Button
-                className="btn-danger "
+                className="btn-danger mx-2"
                 onClick={() => handleToggleCardTitle(refFilteredCard)}
               >
                 Cancel
@@ -162,7 +164,7 @@ const DescriptionBox = (props) => {
           )}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ backgroundColor: "#394867", color: "white" }}>
+      <Modal.Body style={{ backgroundColor: "#394867", color: "rgb(208, 203, 203)" }}>
         <div className="descriptionDiv" style={{ display: "flex" }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -183,7 +185,7 @@ const DescriptionBox = (props) => {
         {!showEditor ? (
           <p
             onClick={() => setShowEditor(!showEditor)}
-            style={{ marginLeft: "35px" }}
+            style={{ marginLeft: "35px",backgroundColor:"#212a3e",width:"85%",padding:"5px" }}
           >
             {refDescriptionText}
           </p>
@@ -192,11 +194,13 @@ const DescriptionBox = (props) => {
             <div
               className="editorDiv"
               style={{ color: "black", width: "100%" }}
-            >
+              >
               <JoditEditor
                 ref={editor}
                 value={content}
                 onChange={(e) => setContent(e)}
+                
+                
               />
               <div
                 style={{
@@ -206,7 +210,7 @@ const DescriptionBox = (props) => {
                 }}
               >
                 <Button
-                  className="btn btn-success"
+                  className="btn btn-secondary"
                   style={{ marginRight: "10px" }}
                   onClick={handleSaveBtn}
                 >
@@ -216,7 +220,7 @@ const DescriptionBox = (props) => {
                   className="btn btn-danger"
                   onClick={() => setShowEditor(!showEditor)}
                 >
-                  Close
+                  Cancel
                 </Button>
               </div>
             </div>
@@ -226,7 +230,7 @@ const DescriptionBox = (props) => {
         <div
           className="activityDiv"
           style={{ display: "flex", marginTop: "25px" }}
-        >
+          >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -252,9 +256,9 @@ const DescriptionBox = (props) => {
               onClick={() => setCommentBox(!commentBox)}
             />
           ) : (
-            <>
-              <JoditEditor ref={commentRef} />
-              <Button className="mx-2 my-2" onClick={handleComment}>
+            <div style={{ color: "black", width: "100%" }}>
+              <JoditEditor ref={commentRef}  />
+              <Button className="mx-2 my-2 btn-secondary" onClick={handleComment}>
                 Comment
               </Button>
               <Button
@@ -263,37 +267,39 @@ const DescriptionBox = (props) => {
               >
                 Cancel
               </Button>
-            </>
+            </div>
           )}
         </div>
         {allCommentsRef.length > 0 ? (
-          <ul>
+          <>
             {allCommentsRef.map((e, index) => {
               return (
-                <li className={style.commentList} key={index}>
-                  <h5>
+                <p className={style.commentList} key={index}>
+                  <span>
                     <Avatar
                       className="me-2"
                       name={userData.userName}
                       round
-                      size="35px"
+                      size="40px"
                     />
                     {userData.userName}
-                  </h5>
-                    <ReactTimeAgo date={e.commentTime} locale="en-US" className="ms-5"/>
+                    <i><ReactTimeAgo date={e.commentTime} locale="en-US" className="ms-2"/></i>
+                  </span>
                   <p className={style.commentText}>
                     <i>{e.comment}</i>
-                    <i className="bi bi-pencil-square ms-5"></i>
+                    <span>
+                    <i className="bi bi-pencil-square"></i>
                     <i
-                      className="bi bi-trash ms-3"
+                      className="bi bi-trash mx-3"
                       id={index}
                       onClick={(e) => handleDeleteComment(e.currentTarget.id)}
                     ></i>
+                    </span>
                   </p>
-                </li>
+                </p>
               );
             })}
-          </ul>
+          </>
         ) : (
           <></>
         )}

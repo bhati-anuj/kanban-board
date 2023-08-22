@@ -11,15 +11,20 @@
     list-style: none;
     margin-bottom: 20px;
     padding-bottom: 10px;
+  
 
 
 }
 .commentText{ 
-    font-size: 18px;
+    font-size: 16px;
     background-color:#212a3e;
     color:rgb(208, 203, 203); 
-    padding-left:10px;
-    margin-bottom: 0;
+    padding:10px;
+    margin-left: 40px; 
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
   
     
 }

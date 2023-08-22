@@ -8,10 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addLoginUser } from "../../Store/ListSlice/UserSlice";
 
 const Signin = () => {
-  const userData = useSelector((state)=>{
+  const userData = useSelector((state) => {
     return state.userList.users;
-  })
-
+  });
 
   console.log(userData);
 
@@ -20,20 +19,25 @@ const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-function handleLogin() {
+  function handleLogin() {
+    if (userData) {
+      const userObj = userData.find(
+        (e) =>
+          e.userEmail === emailRef.current.value &&
+          e.userPassword === passwordRef.current.value
+      );
 
-  const userObj = userData.find((e) =>e.userEmail === emailRef.current.value && e.userPassword === passwordRef.current.value);
-
-  if(userObj){
- 
-    dispatch(addLoginUser(userObj));
-    navigate("/");
+      if (userObj) {
+        dispatch(addLoginUser(userObj));
+        navigate("/");
+      } else {
+        alert("User not found!");
+      }
+    }
+    else{
+      alert("User not found!");
+    }
   }
-  else{
-    alert("User not found!")
-  }
-  
-}
 
   return (
     <div
@@ -94,7 +98,7 @@ function handleLogin() {
                 ></input>
               </label>
 
-              <Button onClick={handleLogin} >Log in</Button>
+              <Button onClick={handleLogin}>Log in</Button>
             </div>
 
             <span className="ms-5">
@@ -105,10 +109,7 @@ function handleLogin() {
             </span>
           </div>
 
-          <div className={style.sideDiv}>
-            {" "}
-            <h1>Back Ground image</h1>
-          </div>
+          <div className={style.sideDiv}></div>
         </div>
       </Modal.Dialog>
     </div>
