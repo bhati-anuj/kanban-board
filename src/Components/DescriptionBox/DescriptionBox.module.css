@@ -1,0 +1,25 @@
+.commentInput{
+    width: 85%;
+    margin-left: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgb(208, 203, 203);
+
+}
+.commentList{
+    width: 90%;
+    list-style: none;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+
+
+}
+.commentText{ 
+    font-size: 18px;
+    background-color:#212a3e;
+    color:rgb(208, 203, 203); 
+    padding-left:10px;
+    margin-bottom: 0;
+  
+    
+}

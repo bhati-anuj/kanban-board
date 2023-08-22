@@ -9,8 +9,7 @@ const ListSlice = createSlice({
     },
 
     addCard(state, action) {
-      const { listID } =
-        action.payload;
+      const { listID } = action.payload;
       const value = state.find((e) => e.ID === listID);
       if (value) {
         value.innerCard.push(action.payload);
@@ -20,28 +19,23 @@ const ListSlice = createSlice({
 
     newCardInsert(state, action) {
       const value = state.find((e) => e.ID === action.payload);
-      if(value){
-
+      if (value) {
         value.newCardInputField = !value.newCardInputField;
       }
     },
 
     addDescription(state, action) {
-      const descData = {
-        descText: action.payload.text,
-        descListID: action.payload.descListId,
-        descCardID: action.payload.descCardId,
-      };
+      const { descText, descListID, descCardID } = action.payload;
 
-      const value = state.find((e) => e.ID === descData.descListID);
+      const value = state.find((e) => e.ID === descListID);
 
       if (value) {
         const cardValue = value.innerCard.find(
-          (item) => item.cardID === descData.descCardID
+          (item) => item.cardID === descCardID
         );
 
         if (cardValue) {
-          cardValue.descriptionData.text = descData.descText;
+          cardValue.descriptionData.text = descText;
         }
       }
     },
@@ -109,10 +103,47 @@ const ListSlice = createSlice({
         }
       }
     },
+    /****************************** Activity Section ***************************** */
+
+    addComment(state,action){
+      const { comment, descListID, descCardID,commentTime } = action.payload;
+      const value = state.find((e) => e.ID === descListID);
+
+      if (value) {
+        const cardValue = value.innerCard.find(
+          (item) => item.cardID === descCardID
+        );
+        
+        if (cardValue) {
+          cardValue.descriptionData.activityArray.unshift({comment,commentTime});
+        }
+      }
+
+    },
+
+    deleteComments(state,action){
+      const {refFilteredCard,event} = action.payload;
+      const value = state.find((e) => e.ID === refFilteredCard.listID);
+
+      if (value) {
+        const cardValue = value.innerCard.find(
+          (item) => item.cardID === refFilteredCard.cardID
+        );
+        
+        if (cardValue) {
+     
+          cardValue.descriptionData.activityArray = cardValue.descriptionData.activityArray.filter((e,index)=>index != event);
+          
+        }
+      }
+      
+    }
+
   },
 });
 
 export { ListSlice };
+
 export const {
   addMainList,
   addCard,
@@ -125,4 +156,6 @@ export const {
   toggleList,
   toggleCard,
   updateCard,
+  addComment,
+  deleteComments,
 } = ListSlice.actions;

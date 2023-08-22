@@ -74,7 +74,7 @@ const MainCard = () => {
         cardID: v4(),
         listID: e.target.id,
         toggleCardTitle: true,
-        descriptionData: { text: "Description goes here..." },
+        descriptionData: { text: "Description goes here...",activityArray:[] },
       })
     );
   };
@@ -118,7 +118,7 @@ const MainCard = () => {
                       {e.listtitle}
                     </h4>
                   ) : (
-                    <form>
+                    <form >
                       <input
                         type="text"
                         style={{ width: "100%", marginBottom: "5px" }}
@@ -162,7 +162,7 @@ const MainCard = () => {
                 </div>
                 {/**********************************************  Inner Card Map ********************************* */}
                 <div className="outerCardDiv">
-                  {e.innerCard.map((item) => (
+                  {e.innerCard && e.innerCard.map((item) => (
                     <>
                       <div className="innerCardDiv">
                         <div

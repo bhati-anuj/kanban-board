@@ -1,3 +1,4 @@
+import style from "./DescriptionBox.module.css";
 import { htmlToText } from "html-to-text";
 import JoditEditor from "jodit-react";
 import React, { useRef } from "react";
@@ -6,16 +7,32 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addComment,
   addDescription,
+  deleteComments,
   toggleCard,
   updateCard,
 } from "../../Store/ListSlice/ListSlice";
+import Avatar from "react-avatar";
+import ReactTimeAgo from 'react-time-ago'
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 const DescriptionBox = (props) => {
+  const activeCard = props.ids;
+  const date = new Date();
   const editor = useRef(null);
+  const commentRef = useRef();
+
   const [content, setContent] = useState("Description goes here...");
   const [showEditor, setShowEditor] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState();
+  const [commentBox, setCommentBox] = useState(false);
 
   const plainText = htmlToText(content);
   const dispatch = useDispatch();
@@ -24,29 +41,31 @@ const DescriptionBox = (props) => {
     return state.mainList;
   });
 
-  const activeCard = props.ids;
+  const userData = useSelector((state) => {
+    return state.userList.loginUser;
+  });
 
   let refFilteredList = useRef();
   let refFilteredCard = useRef();
   let refDescriptionText = useRef();
+  let allCommentsRef = useRef();
 
   if (props.ids) {
     refFilteredList = listData.find((item) => item.ID === activeCard.listId);
-    if(refFilteredList){
-
+    if (refFilteredList) {
       refFilteredCard = refFilteredList.innerCard.find(
         (item) => item.cardID === activeCard.cardId
-        );
-      }
-
+      );
+      allCommentsRef = refFilteredCard.descriptionData.activityArray;
+    }
     refDescriptionText = refFilteredCard.descriptionData.text;
   }
 
   const handleSaveBtn = () => {
     const desc = {
-      text: plainText,
-      descListId: activeCard.listId,
-      descCardId: activeCard.cardId,
+      descText: plainText,
+      descListID: activeCard.listId,
+      descCardID: activeCard.cardId,
     };
     dispatch(addDescription(desc));
     setShowEditor(!showEditor);
@@ -65,6 +84,23 @@ const DescriptionBox = (props) => {
         updatedCardTitle: newCardTitle,
       })
     );
+  }
+  /********************************** Acitivity & Comments************************ */
+
+  function handleComment() {
+    const commentText = htmlToText(commentRef.current.value);
+    const commentData = {
+      descListID: activeCard.listId,
+      descCardID: activeCard.cardId,
+      comment: commentText,
+      commentTime : date,
+    };
+    dispatch(addComment(commentData));
+    setCommentBox(!commentBox);
+  }
+
+  function handleDeleteComment(event) {
+    dispatch(deleteComments({ refFilteredCard, event }));
   }
 
   return (
@@ -117,7 +153,7 @@ const DescriptionBox = (props) => {
                 Update
               </Button>
               <Button
-                className="btn-danger"
+                className="btn-danger "
                 onClick={() => handleToggleCardTitle(refFilteredCard)}
               >
                 Cancel
@@ -207,6 +243,60 @@ const DescriptionBox = (props) => {
           </svg>
           <h5>Activity</h5>
         </div>
+        <div>
+          {!commentBox ? (
+            <input
+              className={style.commentInput}
+              type="text"
+              placeholder="Write a comment..."
+              onClick={() => setCommentBox(!commentBox)}
+            />
+          ) : (
+            <>
+              <JoditEditor ref={commentRef} />
+              <Button className="mx-2 my-2" onClick={handleComment}>
+                Comment
+              </Button>
+              <Button
+                onClick={() => setCommentBox(!commentBox)}
+                className="btn-danger"
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+        </div>
+        {allCommentsRef.length > 0 ? (
+          <ul>
+            {allCommentsRef.map((e, index) => {
+              return (
+                <li className={style.commentList} key={index}>
+                  <h5>
+                    <Avatar
+                      className="me-2"
+                      name={userData.userName}
+                      round
+                      size="35px"
+                    />
+                    {userData.userName}
+                  </h5>
+                    <ReactTimeAgo date={e.commentTime} locale="en-US" className="ms-5"/>
+                  <p className={style.commentText}>
+                    <i>{e.comment}</i>
+                    <i className="bi bi-pencil-square ms-5"></i>
+                    <i
+                      className="bi bi-trash ms-3"
+                      id={index}
+                      onClick={(e) => handleDeleteComment(e.currentTarget.id)}
+                    ></i>
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <></>
+        )}
       </Modal.Body>
       <Modal.Footer style={{ backgroundColor: "#212A3E" }}>
         <Button onClick={props.onHide}>Close</Button>
