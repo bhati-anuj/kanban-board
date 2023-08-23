@@ -46,7 +46,6 @@ const DescriptionBox = (props) => {
   const userData = useSelector((state) => {
     return state.userList.loginUser;
   });
-  console.log(userData);
 
   let refFilteredList = useRef();
   let refFilteredCard = useRef();

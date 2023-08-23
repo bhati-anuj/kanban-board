@@ -22,7 +22,7 @@ function handleCreateAccount() {
     userName : nameRef.current.value,
     userEmail : emailRef.current.value,
     userPassword :passwordRef.current.value,
-    loginKey : false,
+   
     userID : v4(),
   }))
   

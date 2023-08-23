@@ -5,6 +5,7 @@ const UserSlice = createSlice({
   initialState: {
     users: [],
     loginUser: {},
+    loginKey : false,
   },
   reducers: {
     createAccount(state, action) {
@@ -13,9 +14,16 @@ const UserSlice = createSlice({
 
     addLoginUser(state, action) {
       state.loginUser = action.payload;
+      state.loginKey = true;
     },
+
+    logoutUser(state,action){
+      
+      state.loginKey = action.payload;
+      console.log(state.loginKey);
+    }
   },
 });
 
 export { UserSlice };
-export const { createAccount, addLoginUser } = UserSlice.actions;
+export const { createAccount, addLoginUser,logoutUser } = UserSlice.actions;
