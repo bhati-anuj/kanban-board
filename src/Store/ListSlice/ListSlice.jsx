@@ -106,7 +106,7 @@ const ListSlice = createSlice({
     /****************************** Activity Section ***************************** */
 
     addComment(state,action){
-      const { comment, descListID, descCardID,commentTime } = action.payload;
+      const { comment, descListID, descCardID,commentTime,commentBy } = action.payload;
       const value = state.find((e) => e.ID === descListID);
 
       if (value) {
@@ -115,7 +115,7 @@ const ListSlice = createSlice({
         );
         
         if (cardValue) {
-          cardValue.descriptionData.activityArray.unshift({comment,commentTime});
+          cardValue.descriptionData.activityArray.unshift({comment,commentTime,commentBy});
         }
       }
 

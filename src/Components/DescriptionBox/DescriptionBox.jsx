@@ -46,6 +46,7 @@ const DescriptionBox = (props) => {
   const userData = useSelector((state) => {
     return state.userList.loginUser;
   });
+  console.log(userData);
 
   let refFilteredList = useRef();
   let refFilteredCard = useRef();
@@ -96,6 +97,7 @@ const DescriptionBox = (props) => {
       descCardID: activeCard.cardId,
       comment: commentText,
       commentTime : date,
+      commentBy : userData.userName,
     };
     dispatch(addComment(commentData));
     setCommentBox(!commentBox);
@@ -274,21 +276,21 @@ const DescriptionBox = (props) => {
           <>
             {allCommentsRef.map((e, index) => {
               return (
-                <p className={style.commentList} key={index}>
+                <div className={style.commentList} key={index}>
                   <span>
                     <Avatar
                       className="me-2"
-                      name={userData.userName}
+                      name={e.commentBy}
                       round
                       size="40px"
                     />
-                    {userData.userName}
+                    <b>{e.commentBy}</b>
                     <i><ReactTimeAgo date={e.commentTime} locale="en-US" className="ms-2"/></i>
                   </span>
                   <p className={style.commentText}>
                     <i>{e.comment}</i>
                     <span>
-                    <i className="bi bi-pencil-square"></i>
+                    {/* <i className="bi bi-pencil-square"></i> */}
                     <i
                       className="bi bi-trash mx-3"
                       id={index}
@@ -296,7 +298,7 @@ const DescriptionBox = (props) => {
                     ></i>
                     </span>
                   </p>
-                </p>
+                </div>
               );
             })}
           </>
