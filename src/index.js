@@ -12,7 +12,7 @@ import persistStore from 'redux-persist/es/persistStore';
 let persistor = persistStore(store);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
 
@@ -20,7 +20,7 @@ root.render(
     <App />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+  //  </React.StrictMode> 
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -5,11 +5,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signup from "./Components/Signup/Signup";
 import Signin from "./Components/Signin/Signin";
 
+
 function App() {
   return (
     <div className="appContainer">
+      
       <BrowserRouter>
-       
         <Routes>
           <Route path="/" element={<MainCard />} />
           <Route path="/signup" element={<Signup />} />

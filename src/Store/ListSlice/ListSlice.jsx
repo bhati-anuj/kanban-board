@@ -105,40 +105,88 @@ const ListSlice = createSlice({
     },
     /****************************** Activity Section ***************************** */
 
-    addComment(state,action){
-      const { comment, descListID, descCardID,commentTime,commentBy } = action.payload;
+    addComment(state, action) {
+      const { comment, descListID, descCardID, commentTime, commentBy } =
+        action.payload;
       const value = state.find((e) => e.ID === descListID);
 
       if (value) {
         const cardValue = value.innerCard.find(
           (item) => item.cardID === descCardID
         );
-        
+
         if (cardValue) {
-          cardValue.descriptionData.activityArray.unshift({comment,commentTime,commentBy});
+          cardValue.descriptionData.activityArray.unshift({
+            comment,
+            commentTime,
+            commentBy,
+          });
         }
       }
-
     },
 
-    deleteComments(state,action){
-      const {refFilteredCard,event} = action.payload;
+    deleteComments(state, action) {
+      const { refFilteredCard, event } = action.payload;
       const value = state.find((e) => e.ID === refFilteredCard.listID);
 
       if (value) {
         const cardValue = value.innerCard.find(
           (item) => item.cardID === refFilteredCard.cardID
         );
-        
+
         if (cardValue) {
-     
-          cardValue.descriptionData.activityArray = cardValue.descriptionData.activityArray.filter((e,index)=>index != event);
-          
+          cardValue.descriptionData.activityArray =
+            cardValue.descriptionData.activityArray.filter(
+              (e, index) => index != event
+            );
         }
       }
-      
-    }
+    },
 
+    /************************************** Drag and Drop Reducers**************************** */
+    cardDnd(state, action) {
+   
+      const sourceData = action.payload.source;
+      const destiData = action.payload.destination;
+      const dragCardID = action.payload.draggableId;
+
+      const value = state.find((e) => e.ID === destiData.droppableId);
+
+      if (value) {
+        const cardValue = value.innerCard.find(
+          (item) => item.cardID === dragCardID
+        );
+        if (cardValue) {
+          const items = Array.from(value.innerCard);
+          const [reorderedItem] = items.splice(sourceData.index, 1);       
+          items.splice(destiData.index, 0, reorderedItem);
+          value.innerCard = items.slice();
+  
+
+        } 
+        else {
+          const dragList = state.find((e)=>e.ID === sourceData.droppableId );
+          if(dragList){
+            const dragCard = dragList.innerCard.find((item) => item.cardID ===dragCardID )
+      
+            if(dragCard){
+              value.innerCard.splice(destiData.index, 0,dragCard);
+              dragList.innerCard.splice(sourceData.index, 1)
+            }
+          }
+     
+        }
+
+        /*************************************Alternative Method ********************************** */
+        // const copyArr = JSON.parse(JSON.stringify(value.innerCard));
+        // const [removed] = JSON.parse(
+        //   JSON.stringify(copyArr.splice(sourceData.index, 1))
+        // );
+        // copyArr.splice(destiData.index, 0, removed);
+        // value.innerCard = JSON.parse(JSON.stringify(copyArr));
+        /********************************************************************************************** */
+      }
+    },
   },
 });
 
@@ -158,4 +206,5 @@ export const {
   updateCard,
   addComment,
   deleteComments,
+  cardDnd,
 } = ListSlice.actions;
