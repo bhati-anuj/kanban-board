@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const ListSlice = createSlice({
   name: "list",
@@ -145,60 +145,46 @@ const ListSlice = createSlice({
 
     /************************************** Drag and Drop Reducers**************************** */
     cardDnd(state, action) {
-      // console.log(action.payload);
+   
       const sourceData = action.payload.source;
       const destiData = action.payload.destination;
       const dragCardID = action.payload.draggableId;
 
-      if (sourceData.droppableId === "mainDiv") {
-        destiData.droppableId = 'mainDiv';
-        // console.log(current(state));
+      const value = state.find((e) => e.ID === destiData.droppableId);
 
-        const copyArr = JSON.parse(JSON.stringify(current(state)));    
-        const [removed] = copyArr.splice(sourceData.index, 1);
-        copyArr.splice(destiData.index, 0, removed);
+      if (value) {
+        const cardValue = value.innerCard.find(
+          (item) => item.cardID === dragCardID
+        );
+        if (cardValue) {
+          const items = Array.from(value.innerCard);
+          const [reorderedItem] = items.splice(sourceData.index, 1);       
+          items.splice(destiData.index, 0, reorderedItem);
+          value.innerCard = items.slice();
+  
 
-        state = JSON.parse(JSON.stringify(copyArr));
-        return state;
-       
-      } 
+        } 
+        else {
+          const dragList = state.find((e)=>e.ID === sourceData.droppableId );
+          if(dragList){
+            const dragCard = dragList.innerCard.find((item) => item.cardID ===dragCardID )
       
-      else {
-        const value = state.find((e) => e.ID === destiData.droppableId);
-
-        if (value) {
-          const cardValue = value.innerCard.find(
-            (item) => item.cardID === dragCardID
-          );
-          if (cardValue) {
-            const items = Array.from(value.innerCard);
-            const [reorderedItem] = items.splice(sourceData.index, 1);
-            items.splice(destiData.index, 0, reorderedItem);
-            value.innerCard = items.slice();
-
-          } else {
-            const dragList = state.find((e) => e.ID === sourceData.droppableId);
-            if (dragList) {
-              const dragCard = dragList.innerCard.find(
-                (item) => item.cardID === dragCardID
-              );
-
-              if (dragCard) {
-                value.innerCard.splice(destiData.index, 0, dragCard);
-                dragList.innerCard.splice(sourceData.index, 1);
-              }
+            if(dragCard){
+              value.innerCard.splice(destiData.index, 0,dragCard);
+              dragList.innerCard.splice(sourceData.index, 1)
             }
           }
-
-          /*************************************Alternative Method ********************************** */
-          // const copyArr = JSON.parse(JSON.stringify(value.innerCard));
-          // const [removed] = JSON.parse(
-          //   JSON.stringify(copyArr.splice(sourceData.index, 1))
-          // );
-          // copyArr.splice(destiData.index, 0, removed);
-          // value.innerCard = JSON.parse(JSON.stringify(copyArr));
-          /********************************************************************************************** */
+     
         }
+
+        /*************************************Alternative Method ********************************** */
+        // const copyArr = JSON.parse(JSON.stringify(value.innerCard));
+        // const [removed] = JSON.parse(
+        //   JSON.stringify(copyArr.splice(sourceData.index, 1))
+        // );
+        // copyArr.splice(destiData.index, 0, removed);
+        // value.innerCard = JSON.parse(JSON.stringify(copyArr));
+        /********************************************************************************************** */
       }
     },
   },
